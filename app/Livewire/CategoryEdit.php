@@ -28,9 +28,8 @@ class CategoryEdit extends Component
         $this->id = $this->id ?? request()?->id;
         $this->category = Category::findOrFail($this->id);
         $this->name = $this->category->name;
-        $this->name_ar = $this->category->name_ar;
-        $this->show_in_home_page = $this->category->show_in_home_page ? true : false;
-        $this->image_url = url($this->category->image ? "uploads/categories/".$this->category->image : "dist/img/no-thumb.jpg");
+
+//        $this->image_url = url($this->category->image ? "uploads/categories/".$this->category->image : "dist/img/no-thumb.jpg");
         return view('components.addCategory');
     }
 
@@ -38,20 +37,10 @@ class CategoryEdit extends Component
     {
         $this->validate([
             'name' => ['required', 'unique:categories,name,' . $this->category->id . ',id'],
-            'name_ar' => ['required', 'unique:categories,name_ar,' . $this->category->id . ',id'],
-            'image' => ['sometimes', 'nullable', 'file', 'mimes:jpeg,png,jpg,jpg,svg'],
-            'show_in_home_page' => ['required', 'boolean'],
         ]);
-        $image = false;
-        if($this->image){
-            $image = FileUploadService::upload($this->image, 'categories' , 'image');
-        }
         $update = [
             'name' => $this->name,
-            'name_ar' => $this->name_ar,
-            'show_in_home_page' => $this->show_in_home_page
         ];
-        if($image !== false) $update["image"] = $image;
         $this->category->update($update);
         ResponseService::flash("updated successfully", "message");
     }

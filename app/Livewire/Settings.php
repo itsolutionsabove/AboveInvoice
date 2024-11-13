@@ -21,11 +21,14 @@ class Settings extends Component
         $settings = SettingsModel::all()->mapWithKeys(function ($value, $key){
             return [$value->key => $value->value];
         })->toArray();
+
         $this->settings = array_map(function($setting) use($settings){
-            $setting['value'] = $settings[$setting['key']] ?? "";
+
+            $setting['value'] = $settings[$setting['key']] ?? $setting['value'];
             if($setting['type'] != "file") $this->formSettings[$this->name($setting['key'])] = $setting['value'];
             return $setting;
         }, AppInfo::settings());
+
         return view('components.settings');
     }
 
