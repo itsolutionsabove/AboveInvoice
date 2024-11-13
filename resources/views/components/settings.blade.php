@@ -21,7 +21,8 @@
                             <div class="mb-3">
                                 <label class="form-label">{{$setting['key']}}</label>
                                 <input type="{{$setting['type']}}" wire:model="formSettings.{{$this->name($setting['key'])}}" class="form-control"
-                                       autocomplete="off">
+                                       autocomplete="off"
+                                >
                                 @error("formSettings.{$this->name($setting['key'])}") <span class="text-danger error">{{ $message }}</span>@enderror
                             </div>
                         @endforeach
