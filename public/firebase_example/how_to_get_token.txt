@@ -1,0 +1,13 @@
+Go to Firebase Console:
+
+    Open your project in the Firebase Console.
+
+Navigate to Project Settings:
+
+    Click on the gear icon (⚙️) next to Project Overview and select Project settings.
+
+Retrieve the Web API Key:
+
+    Under General settings, you'll find the Web API Key at the bottom of the page under the Your apps section.
+
+Note: This key is needed for server-side verification of Firebase ID tokens.

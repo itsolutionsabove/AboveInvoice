@@ -1,0 +1,20 @@
+.table-search{
+    display: flex;
+}
+
+.table-search .icon {
+    margin: 0 !important;
+}
+
+.table-sort-angles{
+    display: flex;
+    gap: 8px;
+}
+
+.table-sort-angles a{
+    font-size: 18px;
+
+}
+.btn{
+    background-color: #6E9278 !important;
+}
