@@ -44,8 +44,7 @@ class Category extends Model
 
     public function scopeAPISearch($query, $request){
         if($request->search){
-            $query->where('name', 'LIKE', "%$request->search%")
-                ->orWhere('name_ar', 'LIKE', "%$request->search%");
+            $query->where('name', 'LIKE', "%$request->search%");
         }
     }
 
