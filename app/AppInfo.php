@@ -148,12 +148,25 @@ class AppInfo
     public static function settings(): array
     {
         return [
-            ['key' => 'Site Name', 'type' => 'text'],
-            ['key' => 'Site Logo', 'type' => 'file'],
-            ['key' => 'Facebook_link' , 'type'=> 'text'],
-            ['key' => 'Instagram_link' , 'type'=> 'text'],
-            ['key' => 'WhatsApp_link' , 'type'=> 'text'],
-            ['key' => 'Phone' , 'type'=> 'text'],
+            ['key' => 'country_Jordan', 'type' => 'text' ],
+            ['key' => 'address_Jordan', 'type' => 'text' ],
+            ['key' => 'tax number_Jordan', 'type' => 'text'],
+            ['key' => 'phone_Jordan', 'type' => 'text' ],
+            ['key' => 'currency_Jordan', 'type' => 'text' ],
+
+            ['key' => 'country_saudi', 'type' => 'text' ],
+            ['key' => 'address_saudi', 'type' => 'text' ],
+            ['key' => 'tax number_saudi', 'type' => 'text' ],
+            ['key' => 'phone_saudi', 'type' => 'text' ],
+            ['key' => 'currency_saudi', 'type' => 'text' ],
+
+
+//            ['key' => 'Site Name', 'type' => 'text'],
+//            ['key' => 'Site Logo', 'type' => 'file'],
+//            ['key' => 'Facebook_link' , 'type'=> 'text'],
+//            ['key' => 'Instagram_link' , 'type'=> 'text'],
+//            ['key' => 'WhatsApp_link' , 'type'=> 'text'],
+//            ['key' => 'Phone' , 'type'=> 'text'],
         ];
     }
 
