@@ -47,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">total_amount</label>
-                            <input type="number" wire:model="total_amount" class="form-control"
+                            <input type="text" wire:model="total_amount" class="form-control"
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
@@ -57,45 +57,22 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label class="form-label">Branches</label>
-                                    @error('categories') <span class="text-danger error">{{ $message }}</span> @enderror
+                                    @error('branches') <span class="text-danger error">{{ $message }}</span> @enderror
                                     <div>
-                                        @foreach($this->allCategories as $role)
-                                            <span class="row">
-                    <span class="col">{{ $role->name }}</span>
-                    <span class="col-auto">
-                        <label class="form-check form-check-single form-switch">
-                            <input
-                                class="form-check-input"
-                                wire:model="selectedCategory"
-                                value="{{ $role->id }}"
-                                type="radio"> <!-- Changed to radio instead of checkbox -->
-                        </label>
-                    </span>
-                </span>
+									  <span class="row">
+									        @foreach($this->branches as $branch)
+											<select class="form-check-input"
+                                               wire:model="selectedBranch">
+											<option  value="{{ $branch->id }}">{{ $branch->name }}</option>
+											</select>             
+                                     </span>
                                         @endforeach
+									
                                     </div>
                                 </div>
                             </div>
 
-                            {{--                        <div class="row">--}}
-{{--                            <div class="col-sm-12">--}}
-{{--                                <label class="form-label">Categories</label>--}}
-{{--                                @error('categories') <span class="text-danger error">{{ $message }}</span>@enderror--}}
-{{--                                <div>--}}
-{{--                                    @foreach($this->allCategories as $role)--}}
-{{--                                        <span class="row">--}}
-{{--                                        <span class="col">{{$role->name}}</span>--}}
-{{--                                        <span class="col-auto">--}}
-{{--                                            <label class="form-check form-check-single form-switch">--}}
-{{--                                                <input class="form-check-input" wire:model="categories" value="{{$role->id}}"--}}
-{{--                                                       type="checkbox" @if(in_array($role->id, $this->categories)) checked @endif>--}}
-{{--                                            </label>--}}
-{{--                                        </span>--}}
-{{--                                    </span>--}}
-{{--                                    @endforeach--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                      
                         <hr>
 
 

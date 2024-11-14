@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\User;
+use App\Models\Branch;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class BranchSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,17 +16,17 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::create(
+        Branch::create(
             [
                 'name' => 'Jordan',
-                'order' => 1
+               
             ]
         );
 
-        Category::create(
+        Branch::create(
             [
                 'name' => 'Saudi Arabia',
-                'order' => 2
+                
             ]
         );
     }

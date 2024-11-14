@@ -118,21 +118,7 @@ class AppInfo
             'User update',
             'User delete',
 
-            'Role add',
-            'Role edit',
-            'Role update',
-            'Role delete',
-
-            'Category add',
-            'Category edit',
-            'Category update',
-            'Category delete',
-
-            'Product add',
-            'Product edit',
-            'Product update',
-            'Product delete',
-
+            
             // 'Order review',
             // 'Order cancel',
             // 'Order update',
