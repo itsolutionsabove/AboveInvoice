@@ -47,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">total_amount</label>
-                            <input type="text" wire:model="total_amount" class="form-control"
+                            <input type="number" wire:model="total_amount" class="form-control"
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
@@ -59,13 +59,19 @@
                                     <label class="form-label">Branches</label>
                                     @error('branches') <span class="text-danger error">{{ $message }}</span> @enderror
                                     <div>
-									  <span class="row">
 									        @foreach($this->branches as $branch)
-											<select class="form-check-input"
-                                               wire:model="selectedBranch">
-											<option  value="{{ $branch->id }}">{{ $branch->name }}</option>
-											</select>             
-                                     </span>
+                                            <span class="row">
+                    <span class="col">{{ $branch->name }}</span>
+                    <span class="col-auto">
+                        <label class="form-check form-check-single form-switch">
+                            <input
+                                class="form-check-input"
+                                wire:model="selectedBranch"
+                                value="{{ $branch->id }}"
+                                type="radio"> <!-- Changed to radio instead of checkbox -->
+                        </label>
+                    </span>
+                </span>
                                         @endforeach
 									
                                     </div>
