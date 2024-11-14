@@ -7,10 +7,14 @@ use App\Models\Branch;
 use App\Models\Settings;
 use App\Services\FileUploadService;
 use App\Services\OrderingService;
+use App\Services\PDFReportsService;
 use App\Services\Response\ResponseService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
-use PDF;
+use ArPHP\I18N\Arabic;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class AddInvoice extends Component
@@ -40,7 +44,7 @@ class AddInvoice extends Component
     ];
 
     public ?array $categories = [];
-	
+
     public Collection $allInvoices;
 
     public  $selectedBranch = null;
@@ -66,34 +70,64 @@ class AddInvoice extends Component
 
     public function add()
     {
-		$this->invoice_number = invoice::latest('invoice_number')->first();
-		//dd($this->invoice_number);
+
+        // Get the latest invoice number, format it
+        $lastInvoice = Invoice::latest('invoice_number')->first();
+        $this->invoice_number = $lastInvoice ? $lastInvoice->invoice_number + 1 : 1;
+        $formattedInvoiceNumber = sprintf('%05d', $this->invoice_number);
+
+        // Calculate total price and tax
         $items = $this->savedItems;
-		 $total_price= 0;
-          foreach( $items as  $item){
-			  $total_price += $item['price'];
-		  }
-		  $tax_percentage = 15/100 * $total_price;
-		  $total_price_after_tax =$total_price -(15/100 * $total_price) ;
-		  
-        // Generate PDF
-//        $pdf = PDF::loadView('livewire.invoice-template', $data);
-//        $pdfPath = 'invoices/' . $this->invoice_number . '.pdf';
-//        Storage::disk('public')->put($pdfPath, $pdf->output());
-//
-//        // Save invoice data in the database
-       $invoice = Invoice::create([
+        $total_price = array_sum(array_column($items, 'price'));
+        $tax_percentage = 0.15 * $total_price;
+        $total_price_after_tax = $total_price - $tax_percentage;
+
+        // Prepare data for the invoice and PDF
+        $invoiceData = [
             'client_name' => $this->client_name,
-           'client_address' => $this->client_address,
+            'client_address' => $this->client_address,
             'client_tax_number' => $this->client_tax_number,
             'client_phone' => $this->client_phone,
-            'invoice_number' => $this->invoice_number,
-           'invoice_date' => $this->invoice_date,
-           'total_amount' => $this->total_amount,
-           'pdf_path' => $pdfPath,
+            'invoice_number' => $formattedInvoiceNumber,
+            'invoice_date' => now()->format('Y-m-d'),
+            'total_amount' => $this->total_amount,
+            'total_price_after_tax' => $total_price_after_tax,
+            'items' => $items,
+        ];
+
+        // Generate and save the PDF
+        $pdfFileName = 'invoices/' . time() . '.pdf';
+        $pdf = PDFReportsService::init()
+            ->prepare('livewire.invoice-template', $invoiceData, $pdfFileName,  'false', null, 'false', 'A4');
+
+        // Save the invoice record in the database
+        $invoice = Invoice::create([
+            'client_name' => $this->client_name,
+            'client_address' => $this->client_address,
+            'client_tax_number' => $this->client_tax_number,
+            'client_phone' => $this->client_phone,
+            'invoice_number' => $formattedInvoiceNumber,
+            'invoice_date' => now()->format('Y-m-d'),
+            'total_amount' => $this->total_amount,
+            'branch_id' => $this->selectedBranch,
+            'pdf_path' => $pdfFileName,
         ]);
-       
-        return $pdf->download('document.pdf');
-       
+
+        // Reset form after saving
+        $this->resetForm();
+        ResponseService::flash("added successfully", "message");
+
+    }
+
+    public function resetForm()
+    {
+        $this->client_name = '';
+        $this->client_address = '';
+        $this->client_tax_number = '';
+        $this->client_phone = '';
+        $this->invoice_number = '';
+        $this->invoice_date = '';
+        $this->total_amount = '';
+        $this->savedItems = [];
     }
 }

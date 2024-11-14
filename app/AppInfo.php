@@ -118,7 +118,7 @@ class AppInfo
             'User update',
             'User delete',
 
-            
+
             // 'Order review',
             // 'Order cancel',
             // 'Order update',
@@ -136,13 +136,13 @@ class AppInfo
         return [
             ['key' => 'country_Jordan', 'type' => 'text' , 'value' => 'Jordan'],
             ['key' => 'address_Jordan', 'type' => 'text' , 'value' => 'Amman'],
-            ['key' => 'tax number_Jordan', 'type' => 'text', 'value' => '123456'],
+            ['key' => 'tax_number_Jordan', 'type' => 'text', 'value' => '123456'],
             ['key' => 'phone_Jordan', 'type' => 'text', 'value' => '0791234567'],
             ['key' => 'currency_Jordan', 'type' => 'text' , 'value' => 'JOD'],
 
             ['key' => 'country_saudi', 'type' => 'text' , 'value' => 'Saudi Arabia'],
             ['key' => 'address_saudi', 'type' => 'text' , 'value' => 'Riyadh'],
-            ['key' => 'tax number_saudi', 'type' => 'text', 'value' => '123456'],
+            ['key' => 'tax_number_saudi', 'type' => 'text', 'value' => '123456'],
             ['key' => 'phone_saudi', 'type' => 'text', 'value' => '0591234567'],
             ['key' => 'currency_saudi', 'type' => 'text' , 'value' => 'SAR'],
 

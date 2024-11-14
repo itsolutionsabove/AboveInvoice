@@ -7,7 +7,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as httpResponse;
 use Laravel\Sanctum\PersonalAccessToken;
-use Modules\Settings\Entities\GeneralSettings;
+use App\Models\Settings;
+use Illuminate\Support\Facades\Storage;
 use Dompdf\FrameReflower\Text;
 use League\CommonMark\Extension\SmartPunct\EllipsesParser;
 
@@ -32,22 +33,23 @@ class PDFReportsService
         return $this;
     }
 
-    public function prepare($template, $data, $pdfFileName,  $landscape = null , $footer = null , $preview = null , $size = null): httpResponse
+    public function prepare($template, $data, $pdfFileName,  $landscape = null , $footer = null , $preview = null , $size = null): string
     {
 
         $html = view($template)->with($this->getMergedDate($data))->render();
 
-        if ($preview == "true") {
-            return Response::make($this->prepareContent($html, $landscape , $footer), 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $pdfFileName . '"',
-            ]);
-        } else {
-            return Response::make($this->prepareContent($html, $landscape , $footer), 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="' . $pdfFileName . '"',
-            ]);
-        }
+        // Prepare the PDF content
+        $pdfContent = $this->prepareContent($html, $landscape, $footer, $size);
+
+        // Define the storage path for the PDF
+        $pdfPath = $pdfFileName;
+
+        // Store the PDF in the 'public' disk, which is linked to 'storage/app/public'
+        Storage::disk('public')->put($pdfPath, $pdfContent);
+
+        // Return the URL to the stored PDF
+        return Storage::url($pdfPath);
+
 
     }
 
@@ -109,14 +111,18 @@ class PDFReportsService
 
     private function getGlobalSettings(): array
     {
-        $settings = new GeneralSettings();
+        $settings = Settings::all();
         return [
-            'name' => $settings->getSettings('lab-name'),
-            'phone' => $settings->getSettings('lab-phone-number'),
-            'second-phone' => $settings->getSettings('lab-second-phone-number'),
-            'fax' => $settings->getSettings('lab-fax-number'),
-            'email' => $settings->getSettings('lab-email'),
-            'logo' => $settings->getSettings('lab-logo'),
+            'country_Jordan' => $settings->where('key', 'country_Jordan')->first()->value,
+            'address_Jordan' => $settings->where('key', 'address_Jordan')->first()->value,
+            'tax_number_Jordan' => $settings->where('key', 'tax_number_Jordan')->first()->value,
+            'phone_Jordan' => $settings->where('key', 'phone_Jordan')->first()->value,
+            'currency_Jordan' => $settings->where('key', 'currency_Jordan')->first()->value,
+            'country_saudi' => $settings->where('key', 'country_saudi')->first()->value,
+            'address_saudi' => $settings->where('key', 'address_saudi')->first()->value,
+            'tax_number_saudi' => $settings->where('key', 'tax_number_saudi')->first()->value,
+            'phone_saudi' => $settings->where('key', 'phone_saudi')->first()->value,
+            'currency_saudi' => $settings->where('key', 'currency_saudi')->first()->value,
         ];
     }
 

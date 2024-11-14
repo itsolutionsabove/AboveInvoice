@@ -149,11 +149,11 @@
                                     Add new Invoice
                                 </a>
                             </div>
-{{--                            <div class="dropdown-menu-column">--}}
-{{--                                <a class="dropdown-item" href="{{url('admin/categories')}}" wire:navigate>--}}
-{{--                                    List Categories--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
+                            <div class="dropdown-menu-column">
+                                <a class="dropdown-item" href="{{url('admin/invoices')}}" wire:navigate>
+                                    List Invoices
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </li>
