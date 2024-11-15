@@ -62,12 +62,12 @@
 {{--        gap: 20px;--}}
 {{--      }--}}
 {{--      h3 {--}}
-{{--        font-size: 25px;--}}
+{{--        font-size: 15px;--}}
 {{--      }--}}
 {{--      .pre_table .lower .middle {--}}
 {{--        padding: 10px 50px;--}}
 {{--        background-color: #e7e7e7;--}}
-{{--        font-size: 25px;--}}
+{{--        font-size: 15px;--}}
 {{--        font-weight: 700;--}}
 {{--        border-radius: 10px;--}}
 {{--        border: 2px solid black;--}}
@@ -91,7 +91,7 @@
 {{--        line-height: 1.2;--}}
 {{--      }--}}
 {{--      .barcode_section p {--}}
-{{--        font-size: 20px;--}}
+{{--        font-size: 10px;--}}
 {{--        margin-bottom: 15px;--}}
 {{--      }--}}
 {{--      .table_section table {--}}
@@ -102,7 +102,7 @@
 {{--      }--}}
 {{--      .table_section table * {--}}
 {{--        text-align: start;--}}
-{{--        font-size: 25px;--}}
+{{--        font-size: 15px;--}}
 {{--        line-height: 1.2;--}}
 {{--      }--}}
 {{--      .table-auto {--}}
@@ -300,87 +300,302 @@
 {{--    <img src="./invoice.png" alt="" class="bg-img">--}}
 {{--  </body>--}}
 {{--</html>--}}
-    <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>فاتورة ضريبية</title>
-    <style>
-        * {
-          font-family: DejaVu Sans, sans-serif;
-      }
-
-      body * {
-          font-family: DejaVu Sans, sans-serif;
-          direction: rtl;
-          text-align: right;
-      }
-        .container {
-            padding: 20px;
-            margin: 0 auto;
-            width: 80%;
-            border: 1px solid #000;
-        }
-        h1, h3, p {
-            margin: 10px 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #000;
-            text-align: center;
-            font-size: 18px;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
 </head>
-<body>
+<style>
+    @font-face {
+        font-family: DejaVu Sans, sans-serif;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: DejaVu Sans, sans-serif;
+    }
+    body {
+        font-family: 'DejaVu Sans', sans-serif;
+        font-size: 12px;
+    }
+    .overlay{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    /* Here */
+    table {
+        width: 100%;
+        text-align: start !important;
+        border-collapse: collapse;
+    }
+    table th {
+        font-size: 15px;
+        font-weight: bold;
+        text-align: start;
+    }
+    table td {
+        vertical-align: baseline;
+    }
+    table th .middle {
+        padding: 10px 50px !important;
+        background-color: #e7e7e7;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 10px;
+        border: 2px solid black;
+        text-align: center;
+    }
+    /* Here */
+    .bg-img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -10;
+    }
+    .table-auto {
+        width: calc((100% / 5));
+    }
+    .table-lg {
+        width: calc((100% / 4) * 2);
+    }
+    .table_section table thead {
+        background-color: #e7e7e7;
+    }
+    .table_section table th {
+        font-weight: 700;
+        padding: 20px 10px;
+        border: 2px solid black;
+    }
+    .table_section table td {
+        padding: 20px 10px;
+        border: 2px solid black;
+    }
+    .pre_footer .signs h3 {
+        position: relative;
+        font-size: 15px;
+    }
+    .pre_footer .signs h3::before {
+        position: absolute;
+        content: "";
+        left: 0;
+        /*bottom: 3px;*/
+        width: 100%;
+        /*height: 2px;*/
+        background-color: black;
+    }
+</style>
+<body dir="rtl">
+<div class="overlay">
+    <img style="width: 100% ; height: 100%; display: block" src="{{public_path('invoice.png')}}" alt="" class="bg-img" />
+</div>
 <div class="container">
-    <h1>فاتورة ضريبية</h1>
-    <h3>رقم الفاتورة: {{ $invoice_number }}</h3>
-    <h3>تاريخ الفاتورة: {{ $invoice_date }}</h3>
-
-    <p>اسم العميل: {{ $client_name }}</p>
-    <p>عنوان العميل: {{ $client_address }}</p>
-    <p>رقم ضريبي للعميل: {{ $client_tax_number }}</p>
-
     <table>
-        <thead>
-        <tr>
-            <th>الوصف</th>
-            <th>السعر</th>
-            <th>الضريبة</th>
-            <th>الإجمالي</th>
-        </tr>
-        </thead>
         <tbody>
         <tr>
-            <td>تصاميم حملة عمان</td>
-            <td>2500 ريال سعودي</td>
-            <td>375 ريال سعودي</td>
-            <td>2875 ريال سعودي</td>
+            <th colspan="2">فرع السعودية</th>
+            <th style="text-align: end">
+                شارع الملك عبدالله-الرياض- مكتب رقم 160
+            </th>
         </tr>
-        <!-- Add more rows as needed -->
-        </tbody>
-        <tfoot>
         <tr>
-            <td colspan="3">الإجمالي النهائي</td>
-            <td>2875 ريال سعودي</td>
+            <th style="width: calc(100% / 3); padding-top: 30px">
+                <div>رقم الفاتورة &nbsp; 00001</div>
+                <div>تاريخ الفاتورة &nbsp; 2024-8-10</div>
+            </th>
+            <th style="width: calc(100% / 3); padding-top: 30px">
+                <div class="middle">فاتورة ضريبية Tax Invoice</div>
+            </th>
+            <th
+                style="text-align: end; width: calc(100% / 3); padding-top: 30px"
+            >
+                <div>الرقم الضريبي</div>
+                <div>312231989500003</div>
+            </th>
         </tr>
-        </tfoot>
+        </tbody>
     </table>
+    <table>
+        <tbody>
+        <tr>
+            <td style="font-size: 10px; padding-right: 10px; padding-top: 10px">
+                <span style="width: 170px; display: inline-block">الوصف</span>
+                <span style="display: inline-block">:</span>
+            </td>
+            <th
+                style="
+                text-align: end;
+                line-height: 1.2;
+                padding-left: 10px;
+                padding-top: 10px;
+              "
+            >
+                <div>IBAN: SA22 1500 0426 1425 5598 0007</div>
+                <div>بنك البلاد, فرع النسيم الشرقي, شارع حسان بن ثابت</div>
+            </th>
+        </tr>
+        <tr>
+            <td
+                style="font-size: 10px; padding-bottom: 10px; padding-right: 10px"
+            >
+                <span style="width: 170px; display: inline-block">العميل</span>
+                <span style="display: inline-block">:</span>
+            </td>
+        </tr>
+        <tr>
+            <td
+                style="font-size: 10px; padding-bottom: 10px; padding-right: 10px"
+            >
+              <span style="width: 170px; display: inline-block"
+              >عنوان العميل</span
+              >
+                <span style="display: inline-block">:</span>
+            </td>
+        </tr>
+        <tr>
+            <td
+                style="font-size: 10px; padding-bottom: 10px; padding-right: 10px"
+            >
+              <span style="width: 170px; display: inline-block"
+              >رقم ضريبي للعميل</span
+              >
+                <span style="display: inline-block">:</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <section class="table_section">
+        <table style="margin-top: 4px">
+            <thead>
+            <tr>
+                <th style="padding: 10px; width: 30%">الصنف</th>
+                <th style="padding: 10px">السعر</th>
+                <th style="padding: 10px">الضريبة</th>
+                <th style="padding: 10px; width: 35%">الاجمالي</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td >
+                    تصاميم حملة عمان
+                </td>
+                <td >
+                    <div>2500</div>
+                    <div>ريال سعودي</div>
+                </td>
+                <td >
+                    <div>375</div>
+                    <div>ريال سعودي</div>
+                </td>
+                <td >
+                    <div>2875</div>
+                    <div>ريال سعودي</div>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td
+                    colspan="3"
+                >
+                    <h3 style="width: 100%; font-size: 15px">
+                        الفان وثمانمائة وخمسة وسبعون ريالا لاغير
+                    </h3>
+                </td>
+                <td colspan="2" style="padding: 0">
+                    <table style="line-height: 1.2">
+                        <tr>
+                            <th
 
-    <div class="footer">
-        <p>هذا المستند صادر من النظام ولا يحتاج الي توقيع او اختام</p>
-    </div>
+                            >
+                                السعر
+                            </th>
+                            <th
+
+
+                            >
+                                2500
+                            </th>
+                            <th
+
+                            >
+                                ر.س
+                            </th>
+                        </tr>
+                        <tr>
+                            <th
+
+                            >
+                                قيمة الضريبة
+                            </th>
+                            <th
+
+                            >
+                                375
+                            </th>
+                            <th
+
+                            >
+                                ر.س
+                            </th>
+                        </tr>
+                        <tr style="border-top: 2px solid black">
+                            <th
+
+                            >
+                                الصافي
+                            </th>
+                            <th
+
+                            >
+                                2875
+                            </th>
+                            <th
+
+                            >
+                                ر.س
+                            </th>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+    <section class="pre_footer">
+        <h3 style="text-align: center; margin-top: 20px;font-size: 15px;">
+            هذا المستند صادر من النظام ولا يحتاج الي توقيع او اختام
+        </h3>
+        <table style="margin-top: 50px" class="signs">
+            <tbody>
+            <tr>
+                <th style="width: calc(100% / 3)">
+                    <h3 style="display: inline-block">جهز بواسطة</h3>
+                </th>
+                <th style="text-align: center; width: calc(100% / 3)">
+                    <h3 style="display: inline-block">استلم بواسطة</h3>
+                </th>
+                <th style="text-align: end; width: calc(100% / 3)">
+                    <h3 style="display: inline-block">اعتمد بواسطة</h3>
+                </th>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 </div>
+
 </body>
 </html>
