@@ -114,8 +114,13 @@ class AddInvoice extends Component
         ]);
 
         // Reset form after saving
-        $this->resetForm();
-        ResponseService::flash("added successfully", "message");
+//        $this->resetForm();
+
+        $pdfUrl = Storage::url($pdfFileName);
+
+        // Redirect to the PDF preview/download
+        return redirect($pdfUrl);
+//        ResponseService::flash("added successfully", "message");
 
     }
 

@@ -109,9 +109,9 @@ use Illuminate\Support\Facades\Storage;
                                     </a>
                                 </td>
                                 <td class="text-end">
-                                    <a class="btn btn-cyan" href="{{url('admin/product-edit/'.$row->id)}}" wire:navigate>
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
+{{--                                    <a class="btn btn-cyan" href="{{url('admin/product-edit/'.$row->id)}}" wire:navigate>--}}
+{{--                                        <i class="fa fa-pencil"></i>--}}
+{{--                                    </a>--}}
                                     <button wire:loading.attr="disabled" class="btn btn-danger" wire:click="delete({{$row->id}})">
                                         <i class="fa fa-trash"></i>
                                     </button>
