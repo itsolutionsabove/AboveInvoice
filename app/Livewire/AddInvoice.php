@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Resources\Settings\SettingsCollection;
 use App\Models\Invoice;
 use App\Models\Branch;
 use App\Models\Settings;
@@ -70,6 +71,36 @@ class AddInvoice extends Component
 
     public function add()
     {
+        // Validate the form
+        $this->validate([
+            'client_name' => 'required',
+            'client_address' => 'required',
+            'client_tax_number' => 'required',
+            'client_phone' => 'required',
+            'total_amount' => 'required',
+            'selectedBranch' => 'required',
+            'savedItems' => 'required',
+        ]);
+        $settings = Settings::all();
+        //use resource to get the settings
+        $settings = new SettingsCollection($settings);
+        if($this->selectedBranch == 1){
+            $settingData = [
+              'country' => $settings->where('key', 'country_Jordan')->first()->value,
+                'address' => $settings->where('key', 'address_Jordan')->first()->value,
+                'tax_number' => $settings->where('key', 'tax_number_Jordan')->first()->value,
+                'phone' => $settings->where('key', 'phone_Jordan')->first()->value,
+                'currency' => $settings->where('key', 'currency_Jordan')->first()->value,
+            ];
+        }else{
+            $settingData = [
+                'country' => $settings->where('key', 'country_saudi')->first()->value,
+                'address' => $settings->where('key', 'address_saudi')->first()->value,
+                'tax_number' => $settings->where('key', 'tax_number_saudi')->first()->value,
+                'phone' => $settings->where('key', 'phone_saudi')->first()->value,
+                'currency' => $settings->where('key', 'currency_saudi')->first()->value,
+            ];
+        }
 
         // Get the latest invoice number, format it
         $lastInvoice = Invoice::latest('invoice_number')->first();
@@ -81,6 +112,8 @@ class AddInvoice extends Component
         $total_price = array_sum(array_column($items, 'price'));
         $tax_percentage = 0.15 * $total_price;
         $total_price_after_tax = $total_price - $tax_percentage;
+//        dd($tax_percentage , $total_price_after_tax , $total_price);
+        $branchName = Branch::find($this->selectedBranch)->name;
 
         // Prepare data for the invoice and PDF
         $invoiceData = [
@@ -92,7 +125,11 @@ class AddInvoice extends Component
             'invoice_date' => now()->format('Y-m-d'),
             'total_amount' => $this->total_amount,
             'total_price_after_tax' => $total_price_after_tax,
+            'tax_percentage' => $tax_percentage,
+            'total_price' => $total_price,
             'items' => $items,
+            'branch' => $branchName,
+            'settingData' => $settingData,
         ];
 
         // Generate and save the PDF
@@ -101,25 +138,26 @@ class AddInvoice extends Component
             ->prepare('livewire.invoice-template', $invoiceData, $pdfFileName,  'false', null, 'false', 'A4');
 
         // Save the invoice record in the database
-//        $invoice = Invoice::create([
-//            'client_name' => $this->client_name,
-//            'client_address' => $this->client_address,
-//            'client_tax_number' => $this->client_tax_number,
-//            'client_phone' => $this->client_phone,
-//            'invoice_number' => $formattedInvoiceNumber,
-//            'invoice_date' => now()->format('Y-m-d'),
-//            'total_amount' => $this->total_amount,
-//            'branch_id' => $this->selectedBranch,
-//            'pdf_path' => $pdfFileName,
-//        ]);
+        $invoice = Invoice::create([
+            'client_name' => $this->client_name,
+            'client_address' => $this->client_address,
+            'client_tax_number' => $this->client_tax_number,
+            'client_phone' => $this->client_phone,
+            'invoice_number' => $formattedInvoiceNumber,
+            'invoice_date' => now()->format('Y-m-d'),
+            'total_amount' => $total_price,
+            'branch_id' => $this->selectedBranch,
+            'pdf_path' => $pdfFileName,
+        ]);
 
         // Reset form after saving
-//        $this->resetForm();
+        $this->resetForm();
 
         $pdfUrl = Storage::url($pdfFileName);
 
+        $this->dispatch('pdf-generated', ['url' => $pdfUrl]);
         // Redirect to the PDF preview/download
-        return redirect($pdfUrl);
+//        return redirect($pdfUrl);
 //        ResponseService::flash("added successfully", "message");
 
     }

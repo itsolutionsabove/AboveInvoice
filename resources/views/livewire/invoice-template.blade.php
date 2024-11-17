@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Invoice</title>
 </head>
 <style>
     @font-face {
@@ -20,7 +20,8 @@
     }
 
     .container {
-        padding: 150px 30px 30px ;
+        padding: 150px 30px 10px ;
+        /*min-height: 500px;*/
     }
     body {
         /*font-family: 'DejaVu Sans', sans-serif;*/
@@ -112,20 +113,26 @@
         margin-top: 0 !important;
     }
 
+
 </style>
 <body>
 <div class="overlay">
-    <img style="width: 100% ; height: 100%; display: block" src="{{public_path('invoice.png')}}" alt="" class="bg-img" />
+{{--    <img style="width: 100% ; height: 100%; display: block" src="{{public_path('invoice.png')}}" alt="" class="bg-img" />--}}
+    <img style="width: 100% ; height: 100%; display: block" src="{{public_path('hover.jpeg')}}" alt="" class="bg-img" />
 </div>
-<div class="container" style="padding-top:80px">
+
+    <img style="height: 100px; width: 100%" src="{{public_path('nav.jpeg')}}" alt="" />
+
+
+<div class="container" style="padding-top:10px">
     <table>
         <tbody>
         <tr>
             <th>
-               <div style="text-align: left"> شارع الملك عبدالله-الرياض- مكتب رقم 160</div>
+               <div style="text-align: left"> {{$settingData['address']}}</div>
             </th>
             <th colspan="2">
-                <div style="text-align: right">فرع السعودية</div>
+                <div style="text-align: right">فرع {{$branch}}</div>
             </th>
         </tr>
         <tr>
@@ -134,7 +141,7 @@
             >
                 <div style="text-align: left">
                     <div>الرقم الضريبي</div>
-                    <div>312231989500003</div>
+                    <div>{{$settingData['tax_number']}}</div>
                 </div>
             </th>
             <th style="text-align: center; padding-top: 0; width: calc(100% / 3)">
@@ -150,8 +157,8 @@
             </th>
             <th style="padding-top: 0; width: calc(100% / 3)">
                 <div style="text-align: right">
-                    <div>رقم الفاتورة  00001</div>
-                    <div>تاريخ الفاتورة  2024-8-10</div>
+                    <div> رقم الفاتورة  : {{$invoice_number}}</div>
+                    <div> تاريخ الفاتورة : {{$invoice_date}}</div>
                 </div>
             </th>
         </tr>
@@ -176,22 +183,26 @@
             </th>
             <td style="font-size: 13px; padding-right: 10px; padding-top: 0;text-align: right;line-height: 0.8">
                 <div>
+
                     <div style="text-align: end">
-                        <span style="display: inline-block">سامي</span>
-                        <span style="display: inline-block">:</span>
-                        <span style="width: 130px; display: inline-block">الوصف</span>
-                    </div>
-                    <div style="text-align: end">
+                        <span style="display: inline-block">{{$client_name}}</span>
                         <span style="display: inline-block">:</span>
                         <span style="width: 130px; display: inline-block">العميل</span>
                     </div>
                     <div style="text-align: right">
+                        <span style="display: inline-block">{{$client_address}}</span>
                         <span style="display: inline-block">:</span>
                         <span style="width: 130px; display: inline-block">عنوان العميل</span>
                     </div>
                     <div style="text-align: end; padding-bottom: 10px">
+                        <span style="display: inline-block">{{$client_tax_number}}</span>
                         <span style="display: inline-block">:</span>
                         <span style="width: 130px; display: inline-block">رقم ضريبي العميل</span>
+                    </div>
+                    <div style="text-align: end">
+                        <span style="display: inline-block">{{$client_phone}}</span>
+                        <span style="display: inline-block">:</span>
+                        <span style="width: 130px; display: inline-block">الهاتف</span>
                     </div>
                 </div>
             </td>
@@ -209,50 +220,75 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td style="text-align: right">
-                    <span>ريال سعودي</span>
-                    <span style="font-weight: bold">2875</span>
+            @foreach($items as $item)
+                <?php
+                    $tax_percentage_item = $item['price'] * 0.15;
+                    $total_price_after_tax_item = $item['price'] - $tax_percentage_item;
+                    ?>
+                <tr>
+                    <td style="text-align: right">
+                        <span>{{$settingData['currency']}}</span>
+                        <span style="font-weight: bold">{{$item['price']}}</span>
 
-                </td>
-                <td style="text-align: right">
-                    <span>ريال سعودي</span>
-                    <span style="font-weight: bold">375</span>
+                    </td>
+                    <td style="text-align: right">
+                        <span>{{$settingData['currency']}}</span>
+                        <span style="font-weight: bold">{{$tax_percentage_item}}</span>
 
-                </td>
-                <td style="text-align: right">
-                    <span>ريال سعودي</span>
-                    <span style="font-weight: bold">2500</span>
-                </td>
-                <td style="text-align: right ; font-size: 13px">
-                    تصاميم حملة عمان
-                </td>
-            </tr>
+                    </td>
+                    <td style="text-align: right">
+                        <span>{{$settingData['currency']}}</span>
+                        <span style="font-weight: bold">{{$total_price_after_tax_item}}</span>
+                    </td>
+                    <td style="text-align: right ; font-size: 13px">
+                        {{$item['name']}}
+                    </td>
+                </tr>
+            @endforeach
+{{--            <tr>--}}
+{{--                <td style="text-align: right">--}}
+{{--                    <span>ريال سعودي</span>--}}
+{{--                    <span style="font-weight: bold">2875</span>--}}
+
+{{--                </td>--}}
+{{--                <td style="text-align: right">--}}
+{{--                    <span>ريال سعودي</span>--}}
+{{--                    <span style="font-weight: bold">375</span>--}}
+
+{{--                </td>--}}
+{{--                <td style="text-align: right">--}}
+{{--                    <span>ريال سعودي</span>--}}
+{{--                    <span style="font-weight: bold">2500</span>--}}
+{{--                </td>--}}
+{{--                <td style="text-align: right ; font-size: 13px">--}}
+{{--                    تصاميم حملة عمان--}}
+{{--                </td>--}}
+{{--            </tr>--}}
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="1" style="padding: 0">
                     <table style="text-align: left; width: 100%;">
                         <tr>
-                            <th>ر.س</th>
-                            <th>2500</th>
+                            <th>{{$settingData['currency']}}</th>
+                            <th>{{$total_price_after_tax}}</th>
                             <th>السعر</th>
                         </tr>
                         <tr>
-                            <th>ر.س</th>
-                            <th>375</th>
+                            <th>{{$settingData['currency']}}</th>
+                            <th>{{$tax_percentage}}</th>
                             <th>قيمة الضريبة</th>
                         </tr>
                         <tr style="border-top: 2px solid black">
-                            <th>ر.س</th>
-                            <th>2875</th>
+                            <th>{{$settingData['currency']}}</th>
+                            <th>{{$total_price}}</th>
                             <th>الصافي</th>
                         </tr>
                     </table>
                 </td>
                 <td colspan="3">
                     <h3 style="width: 100%; font-size: 13px; text-align: right;">
-                        الفان وثمانمائة وخمسة وسبعون ريالا لاغير
+                        {{$total_amount}}
                     </h3>
                 </td>
             </tr>
@@ -280,6 +316,8 @@
         </table>
     </section>
 </div>
+
+<img style="width: 100% ; height: 100px ; position: fixed; left: 0;bottom: 0" src="{{public_path('footer.jpeg')}}" alt="" />
 
 </body>
 </html>

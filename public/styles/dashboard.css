@@ -1,5 +1,5 @@
 .dashboard-color{
-    background: #35493b;
+    background: #081428;
     display: inline-table !important;
     /* height: 100% !important; */
 }
@@ -11,12 +11,12 @@
 }
 
 @media(max-width: 600px) {
-    
+
 .search-box {
- width:100%   
+ width:100%
 }
 .search-box .search-box-parent {
-    width:100%   
+    width:100%
    }
 }
 

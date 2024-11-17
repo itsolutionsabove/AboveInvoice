@@ -28,7 +28,7 @@
     </style>
     @livewireStyles
 </head>
-<body class="d-flex flex-column" style="background-color: #538072;">
+<body class="d-flex flex-column" style="background-color: #081428;">
 
 @livewire('login')
 

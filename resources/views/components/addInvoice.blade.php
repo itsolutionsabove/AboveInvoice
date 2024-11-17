@@ -22,32 +22,32 @@
                             </div>
                         @endif
                         <div class="mb-3">
-                            <label class="form-label">client_name</label>
+                            <label class="form-label">Client Name</label>
                             <input type="text" wire:model="client_name" class="form-control"
                                    autocomplete="off">
                             @error('client_name') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">client_address</label>
+                            <label class="form-label">Client Address</label>
                             <input type="text" wire:model="client_address" class="form-control"
                                    autocomplete="off">
                             @error('client_address') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">client_tax_number</label>
+                            <label class="form-label">Client Tax Number</label>
                             <input type="text" wire:model="client_tax_number" class="form-control"
                                    autocomplete="off">
                             @error('client_tax_number') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">client_phone</label>
+                            <label class="form-label">Client Phone</label>
                             <input type="text" wire:model="client_phone" class="form-control"
                                    autocomplete="off">
                             @error('client_phone') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">total_amount</label>
-                            <input type="number" wire:model="total_amount" class="form-control"
+                            <label class="form-label">Total Amount in Text</label>
+                            <input type="text" wire:model="total_amount" class="form-control"
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
@@ -70,10 +70,11 @@
                                 value="{{ $branch->id }}"
                                 type="radio"> <!-- Changed to radio instead of checkbox -->
                         </label>
+
                     </span>
                 </span>
                                         @endforeach
-
+                                                @error('selectedBranch') <span class="text-danger error">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                             </div>
@@ -113,6 +114,7 @@
                                                 Add to list
                                             </span>
                                         </button>
+                                        @error('savedItems') <span class="text-danger error">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div>
@@ -172,3 +174,11 @@
     </div>
 </div>
 
+<script>
+    // window.addEventListener('pdf-generated', (event) => {
+    //     window.location = event.detail[0].url;
+    // })
+    window.addEventListener('pdf-generated', (event) => {
+        window.open(event.detail[0].url, '_blank'); // Open the URL in a new tab
+    });
+</script>
