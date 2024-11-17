@@ -73,13 +73,11 @@
                     </span>
                 </span>
                                         @endforeach
-									
+
                                     </div>
                                 </div>
                             </div>
 
-                      
-                        <hr>
 
 
                         <hr>

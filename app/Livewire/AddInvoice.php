@@ -101,17 +101,17 @@ class AddInvoice extends Component
             ->prepare('livewire.invoice-template', $invoiceData, $pdfFileName,  'false', null, 'false', 'A4');
 
         // Save the invoice record in the database
-        $invoice = Invoice::create([
-            'client_name' => $this->client_name,
-            'client_address' => $this->client_address,
-            'client_tax_number' => $this->client_tax_number,
-            'client_phone' => $this->client_phone,
-            'invoice_number' => $formattedInvoiceNumber,
-            'invoice_date' => now()->format('Y-m-d'),
-            'total_amount' => $this->total_amount,
-            'branch_id' => $this->selectedBranch,
-            'pdf_path' => $pdfFileName,
-        ]);
+//        $invoice = Invoice::create([
+//            'client_name' => $this->client_name,
+//            'client_address' => $this->client_address,
+//            'client_tax_number' => $this->client_tax_number,
+//            'client_phone' => $this->client_phone,
+//            'invoice_number' => $formattedInvoiceNumber,
+//            'invoice_date' => now()->format('Y-m-d'),
+//            'total_amount' => $this->total_amount,
+//            'branch_id' => $this->selectedBranch,
+//            'pdf_path' => $pdfFileName,
+//        ]);
 
         // Reset form after saving
 //        $this->resetForm();
