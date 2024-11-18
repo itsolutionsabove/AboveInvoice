@@ -3,25 +3,30 @@
 namespace App\Livewire;
 
 use App\Http\Resources\Settings\SettingsCollection;
-use App\Models\Invoice;
 use App\Models\Branch;
+use App\Models\Client;
+use App\Models\Invoice;
 use App\Models\Settings;
 use App\Services\FileUploadService;
 use App\Services\OrderingService;
 use App\Services\PDFReportsService;
 use App\Services\Response\ResponseService;
-use Illuminate\Database\Eloquent\Collection;
-use Livewire\Component;
 use ArPHP\I18N\Arabic;
 use Barryvdh\DomPDF\Facade\Pdf;
+use id;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
 
+use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class AddInvoice extends Component
 {
     use WithFileUploads;
 
+    public $clients;
+    public $selected_client_id;
+    public $selected_client_data;
     public $client_name;
     public $client_address;
     public $client_tax_number;
@@ -30,7 +35,7 @@ class AddInvoice extends Component
     public $invoice_date;
     public $total_amount;
     public $branches;
-	public $settings;
+    public $settings;
 
     public array $savedItems = [], $formModel = [], $itemsForm = [
         'name' => [
@@ -43,8 +48,12 @@ class AddInvoice extends Component
             'type' => 'number',
         ],
     ];
+    // Calculate total price and tax
+    public $total_price;
+    public $tax_percentage;
+    public $total_price_after_tax;
 
-    public ?array $categories = [];
+
 
     public Collection $allInvoices;
 
@@ -53,9 +62,14 @@ class AddInvoice extends Component
     public function render()
     {
         $this->formModel = [];
-        foreach ($this->itemsForm as $key => $items)$this->formModel[$key] = '';
-		$this->branches = Branch::all();
+        foreach ($this->itemsForm as $key => $items) $this->formModel[$key] = '';
+        $this->branches = Branch::all();
         $this->allInvoices = Invoice::all();
+        $this->clients = Client::all();
+        $this->total_price = array_sum(array_column($this->savedItems, 'price'));
+        $this->tax_percentage = 0.15 * $this->total_price;
+        $this->total_price_after_tax = $this->total_price + $this->tax_percentage;
+
         return view('components.addInvoice');
     }
 
@@ -68,31 +82,34 @@ class AddInvoice extends Component
     {
         unset($this->savedItems[$index]);
     }
-
+    
     public function add()
     {
+        
         // Validate the form
         $this->validate([
-            'client_name' => 'required',
-            'client_address' => 'required',
-            'client_tax_number' => 'required',
-            'client_phone' => 'required',
+            'selected_client_id' => 'required',
+           // 'client_address' => 'required',
+          //  'client_tax_number' => 'required',
+           // 'client_phone' => 'required',
             'total_amount' => 'required',
             'selectedBranch' => 'required',
             'savedItems' => 'required',
         ]);
+
+       $selected_client_data = Client::find($this->selected_client_id);
         $settings = Settings::all();
         //use resource to get the settings
         $settings = new SettingsCollection($settings);
-        if($this->selectedBranch == 1){
+        if ($this->selectedBranch == 1) {
             $settingData = [
-              'country' => $settings->where('key', 'country_Jordan')->first()->value,
+                'country' => $settings->where('key', 'country_Jordan')->first()->value,
                 'address' => $settings->where('key', 'address_Jordan')->first()->value,
                 'tax_number' => $settings->where('key', 'tax_number_Jordan')->first()->value,
                 'phone' => $settings->where('key', 'phone_Jordan')->first()->value,
                 'currency' => $settings->where('key', 'currency_Jordan')->first()->value,
             ];
-        }else{
+        } else {
             $settingData = [
                 'country' => $settings->where('key', 'country_saudi')->first()->value,
                 'address' => $settings->where('key', 'address_saudi')->first()->value,
@@ -107,27 +124,22 @@ class AddInvoice extends Component
         $this->invoice_number = $lastInvoice ? $lastInvoice->invoice_number + 1 : 1;
         $formattedInvoiceNumber = sprintf('%05d', $this->invoice_number);
 
-        // Calculate total price and tax
-        $items = $this->savedItems;
-        $total_price = array_sum(array_column($items, 'price'));
-        $tax_percentage = 0.15 * $total_price;
-        $total_price_after_tax = $total_price - $tax_percentage;
-//        dd($tax_percentage , $total_price_after_tax , $total_price);
+
         $branchName = Branch::find($this->selectedBranch)->name;
 
         // Prepare data for the invoice and PDF
         $invoiceData = [
-            'client_name' => $this->client_name,
-            'client_address' => $this->client_address,
-            'client_tax_number' => $this->client_tax_number,
-            'client_phone' => $this->client_phone,
+            'client_name' => $selected_client_data->name,
+            'client_address' => $selected_client_data->address,
+            'client_tax_number' => $selected_client_data->tax_number,
+            'client_phone' => $selected_client_data->phone,
             'invoice_number' => $formattedInvoiceNumber,
             'invoice_date' => now()->format('Y-m-d'),
             'total_amount' => $this->total_amount,
-            'total_price_after_tax' => $total_price_after_tax,
-            'tax_percentage' => $tax_percentage,
-            'total_price' => $total_price,
-            'items' => $items,
+            'total_price_after_tax' => $this->total_price_after_tax,
+            'tax_percentage' => $this->tax_percentage,
+            'total_price' => $this->total_price,
+            'items' => $this->savedItems,
             'branch' => $branchName,
             'settingData' => $settingData,
         ];
@@ -139,13 +151,13 @@ class AddInvoice extends Component
 
         // Save the invoice record in the database
         $invoice = Invoice::create([
-            'client_name' => $this->client_name,
-            'client_address' => $this->client_address,
-            'client_tax_number' => $this->client_tax_number,
-            'client_phone' => $this->client_phone,
+            'client_name' => $selected_client_data->name,
+            'client_address' => $selected_client_data->address,
+            'client_tax_number' => $selected_client_data->tax_number,
+            'client_phone' => $selected_client_data->phone,
             'invoice_number' => $formattedInvoiceNumber,
             'invoice_date' => now()->format('Y-m-d'),
-            'total_amount' => $total_price,
+            'total_amount' => $this->total_price,
             'branch_id' => $this->selectedBranch,
             'pdf_path' => $pdfFileName,
         ]);
@@ -157,8 +169,8 @@ class AddInvoice extends Component
 
         $this->dispatch('pdf-generated', ['url' => $pdfUrl]);
         // Redirect to the PDF preview/download
-//        return redirect($pdfUrl);
-//        ResponseService::flash("added successfully", "message");
+        //        return redirect($pdfUrl);
+        //        ResponseService::flash("added successfully", "message");
 
     }
 

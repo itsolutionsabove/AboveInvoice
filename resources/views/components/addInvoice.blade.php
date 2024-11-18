@@ -21,9 +21,21 @@
                                 {{ session('error') }}
                             </div>
                         @endif
+						  <div class="mb-3">
+                            <label class="form-label">Select Client</label>
+                            <select class="form-control" wire:model.live="selected_client_id"><option>select</option>
+                            @foreach($clients as $client)
+                                <option value={{$client->id}}> {{$client->name}} </option>
+                            @endforeach  
+                            </select>
+                             {{--
+                                   
+                           @error('client_id') <span class="text-danger error">{{ $message }}</span>@enderror
+                        </div>
                         <div class="mb-3">
+                           
                             <label class="form-label">Client Name</label>
-                            <input type="text" wire:model="client_name" class="form-control"
+                            <input type="text" wire:model.live="client_name" class="form-control" 
                                    autocomplete="off">
                             @error('client_name') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
@@ -51,7 +63,7 @@
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
-
+--}}
 
                         <hr>
                             <div class="row">
@@ -138,8 +150,30 @@
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </td>
-                                        </Tr>
+                                        </tr>
                                         @endforeach
+										
+                                        <tr>
+                                            <td>  Total Price  </td>
+                                            <td>
+											{{$this->total_price}}
+                                            </td>
+											
+                                        </tr>
+                                        <tr>
+                                            <td> Tax Percentage </td>
+                                            <td>
+                                              {{ $tax_percentage }}
+                                            </td>
+											
+                                        </tr>
+										<tr>
+                                            <td>  Total Price After Tax  </td>
+                                            <td>
+											{{$this->total_price_after_tax}}
+                                            </td>
+											
+                                        </tr>
                                     </table>
                                 </div>
                             </div>
@@ -147,7 +181,12 @@
 
                         <hr>
 
-
+                        <div class="mb-3">
+                            <label class="form-label">Total Amount in Text</label>
+                            <input type="text" wire:model="total_amount" class="form-control"
+                                   autocomplete="off">
+                            @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
+                        </div>
                         <div class="form-footer">
                             @if($this->__name == "invoice-edit")
                                 <button type="submit" wire:loading.attr="disabled"

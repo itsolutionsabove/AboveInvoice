@@ -223,7 +223,7 @@
             @foreach($items as $item)
                 <?php
                     $tax_percentage_item = $item['price'] * 0.15;
-                    $total_price_after_tax_item = $item['price'] - $tax_percentage_item;
+                    $total_price_after_tax_item = $item['price'] + $tax_percentage_item;
                     ?>
                 <tr>
                     <td style="text-align: right">
@@ -269,9 +269,9 @@
             <tr>
                 <td colspan="1" style="padding: 0">
                     <table style="text-align: left; width: 100%;">
-                        <tr>
+                        <tr style="border-top: 2px solid black">
                             <th>{{$settingData['currency']}}</th>
-                            <th>{{$total_price_after_tax}}</th>
+                            <th>{{$total_price}}</th>
                             <th>السعر</th>
                         </tr>
                         <tr>
@@ -279,10 +279,11 @@
                             <th>{{$tax_percentage}}</th>
                             <th>قيمة الضريبة</th>
                         </tr>
-                        <tr style="border-top: 2px solid black">
+                        
+                        <tr>
                             <th>{{$settingData['currency']}}</th>
-                            <th>{{$total_price}}</th>
-                            <th>الصافي</th>
+                            <th>{{$total_price_after_tax}}</th>
+                            <th>السعرالإجمالى</th>
                         </tr>
                     </table>
                 </td>
