@@ -9,4 +9,14 @@ class Branch extends Model
 {
     use HasFactory;
 	protected $fillable = ['name'];
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
 }

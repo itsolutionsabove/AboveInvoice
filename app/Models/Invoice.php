@@ -19,4 +19,19 @@ class Invoice extends Model
         return $this->belongsTo(Branch::class);
     }
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('client_name', 'like', '%' . $search . '%')
+            ->orWhere('client_address', 'like', '%' . $search . '%')
+            ->orWhere('client_tax_number', 'like', '%' . $search . '%')
+            ->orWhere('client_phone', 'like', '%' . $search . '%')
+            ->orWhere('invoice_number', 'like', '%' . $search . '%')
+            ->orWhere('total_amount', 'like', '%' . $search . '%')
+            ->orWhere('invoice_date', 'like', '%' . $search . '%')
+            //branch name
+            ->orWhereHas('branch', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+    }
+
 }
