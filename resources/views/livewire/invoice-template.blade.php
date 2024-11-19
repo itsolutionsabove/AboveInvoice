@@ -228,7 +228,7 @@
                 <tr>
                     <td style="text-align: right">
                         <span>{{$settingData['currency']}}</span>
-                        <span style="font-weight: bold">{{$item['price']}}</span>
+                        <span style="font-weight: bold">{{$total_price_after_tax_item}}</span>
 
                     </td>
                     <td style="text-align: right">
@@ -238,7 +238,7 @@
                     </td>
                     <td style="text-align: right">
                         <span>{{$settingData['currency']}}</span>
-                        <span style="font-weight: bold">{{$total_price_after_tax_item}}</span>
+                        <span style="font-weight: bold">{{$item['price']}}</span>
                     </td>
                     <td style="text-align: right ; font-size: 13px">
                         {{$item['name']}}
@@ -279,7 +279,7 @@
                             <th>{{$tax_percentage}}</th>
                             <th>قيمة الضريبة</th>
                         </tr>
-                        
+
                         <tr>
                             <th>{{$settingData['currency']}}</th>
                             <th>{{$total_price_after_tax}}</th>

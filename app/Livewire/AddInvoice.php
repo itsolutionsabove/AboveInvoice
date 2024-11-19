@@ -76,6 +76,10 @@ class AddInvoice extends Component
 
     public function addItemes()
     {
+        $this->validate([
+            'formModel.name' => 'required',
+            'formModel.price' => 'required',
+        ]);
         $this->savedItems[] = $this->formModel;
     }
 
@@ -84,20 +88,29 @@ class AddInvoice extends Component
         unset($this->savedItems[$index]);
     }
 
+    protected function validateClientFields($isNew = true)
+    {
+        $rules = [
+            'client_name' => 'required|string|max:255',
+            'client_address' => 'required|string|max:255',
+            'client_tax_number' => 'required|string|max:255' . ($isNew ? '|unique:clients,tax_number' : ''),
+            'client_phone' => 'required|string|max:15' . ($isNew ? '|unique:clients,phone' : ''),
+        ];
+
+        $this->validate($rules);
+    }
     public function add()
     {
 
+
+
         // Validate the form
         $this->validate([
-          //  'selected_client_id' => 'required',
-           // 'client_address' => 'required',
-          //  'client_tax_number' => 'required',
-           // 'client_phone' => 'required',
             'total_amount' => 'required',
             'selectedBranch' => 'required',
             'savedItems' => 'required',
         ]);
-       
+
         $settings = Settings::all();
         //use resource to get the settings
         $settings = new SettingsCollection($settings);
@@ -144,6 +157,35 @@ class AddInvoice extends Component
             'settingData' => $settingData,
         ];
 
+
+
+        if (!$this->isAddingClient) {
+            $this->validate([
+                'selected_client_id' => 'required',
+            ]);
+
+            if ($this->selected_client_id) {
+                $this->validateClientFields(false); // Validate for existing client (no unique rule)
+
+                $client = Client::findOrFail($this->selected_client_id);
+                $client->update([
+                    'name' => $this->client_name,
+                    'address' => $this->client_address,
+                    'tax_number' => $this->client_tax_number,
+                    'phone' => $this->client_phone,
+                ]);
+            }
+        } else {
+            // Adding a new client
+            $this->validateClientFields(); // Validate for new client (includes unique rule)
+
+            Client::create([
+                'name' => $this->client_name,
+                'address' => $this->client_address,
+                'tax_number' => $this->client_tax_number,
+                'phone' => $this->client_phone,
+            ]);
+        }
         // Generate and save the PDF
         $pdfFileName = 'invoices/' . time() . '.pdf';
         $pdf = PDFReportsService::init()
@@ -151,7 +193,7 @@ class AddInvoice extends Component
 
         // Save the invoice record in the database
         $invoice = Invoice::create([
-           'client_name' => $this->client_name,
+            'client_name' => $this->client_name,
             'client_address' =>$this->client_address,
             'client_tax_number' => $this->client_tax_number,
             'client_phone' => $this->client_phone,
@@ -161,23 +203,6 @@ class AddInvoice extends Component
             'branch_id' => $this->selectedBranch,
             'pdf_path' => $pdfFileName,
         ]);
-        // save or update client
-        if(!$this->isAddingClient && $this->selected_client_id ){
-       $client = Client::find($this->selected_client_id);
-       $client->name = $this->client_name;
-       $client->address = $this->client_address;
-       $client-> tax_number = $this->client_tax_number;
-       $client->phone = $this->client_phone;
-       $client->save();
-       }
-       elseif($this->isAddingClient){
-         Client::create([
-            'name' => $this->client_name,
-            'address' => $this->client_address,
-            'tax_number' => $this->client_tax_number,
-            'phone' => $this->client_phone, 
-        ]);
-       }
 
         // Reset form after saving
         $this->resetForm();

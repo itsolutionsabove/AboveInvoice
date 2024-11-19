@@ -64,6 +64,17 @@ use Illuminate\Support\Facades\Storage;
                             </th>
                             <th>
                                 <div class="table-sort-angles">
+                                    Invoice Number
+                                    <a href="#" wire:click="sortBy('invoice_number', 'asc')" wire:loading.attr="disabled">
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <a href="#" wire:click="sortBy('invoice_number', 'desc')" wire:loading.attr="disabled">
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="table-sort-angles">
                                     Date
                                     <a href="#" wire:click="sortBy('invoice_date', 'asc')" wire:loading.attr="disabled">
                                         <i class="fa fa-angle-down"></i>
@@ -91,6 +102,9 @@ use Illuminate\Support\Facades\Storage;
                             <tr>
                                 <td>
                                     {{$row->client_name}}
+                                </td>
+                                <td>
+                                    {{$row->invoice_number}}
                                 </td>
                                 <td>
                                     {{$row->invoice_date}}

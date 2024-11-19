@@ -50,6 +50,7 @@
 
                                 <!-- Add New Client Tab -->
                                 @if($isSelectingClient || $isAddingClient)
+                                    <hr>
                                     <div>
                                         <div class="mb-3">
                                             <label class="form-label">Client Name</label>
@@ -149,7 +150,7 @@
                                                                    class="form-control"
                                                                    autocomplete="off">
                                                         @endif
-                                                        @error('formModel.'. $key )  <span class="text-danger error">{{ $message }}</span>@enderror
+                                                        @error('formModel.'. $key )  <span class="text-danger error"> please fill This field</span>@enderror
                                                     </div>
                                                 </div>
                                             @endforeach
