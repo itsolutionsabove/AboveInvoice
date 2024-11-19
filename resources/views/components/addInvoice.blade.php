@@ -28,7 +28,7 @@
                                         Select Client
                                     </button>
                                     <button type="button" class="btn btn-secondary" wire:click="$set('isAddingClient', true)">
-                                        Add New Client
+                                        Add Client
                                     </button>
                                 </div>
 
@@ -36,7 +36,7 @@
                                 @if(!$isAddingClient)
                                     <div>
                                         <label class="form-label">Select Client</label>
-                                        <select class="form-control" wire:model="selected_client_id">
+                                        <select class="form-control" wire:model="selected_client_id" wire:change="$set('isSelectingClient', true)">
                                             <option value="">Select Client</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
@@ -49,7 +49,7 @@
                                 @endif
 
                                 <!-- Add New Client Tab -->
-                                @if($isAddingClient)
+                                @if($isSelectingClient || $isAddingClient)
                                     <div>
                                         <div class="mb-3">
                                             <label class="form-label">Client Name</label>

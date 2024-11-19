@@ -26,8 +26,8 @@ class AddInvoice extends Component
 
     public $clients;
     public $isAddingClient = false; // Toggle between select and add client
+    public $isSelectingClient = false;
     public $selected_client_id;
-    public $selected_client_data;
     public $client_name;
     public $client_address;
     public $client_tax_number;
@@ -89,7 +89,7 @@ class AddInvoice extends Component
 
         // Validate the form
         $this->validate([
-            'selected_client_id' => 'required',
+          //  'selected_client_id' => 'required',
            // 'client_address' => 'required',
           //  'client_tax_number' => 'required',
            // 'client_phone' => 'required',
@@ -97,8 +97,7 @@ class AddInvoice extends Component
             'selectedBranch' => 'required',
             'savedItems' => 'required',
         ]);
-
-       $selected_client_data = Client::find($this->selected_client_id);
+       
         $settings = Settings::all();
         //use resource to get the settings
         $settings = new SettingsCollection($settings);
@@ -130,10 +129,10 @@ class AddInvoice extends Component
 
         // Prepare data for the invoice and PDF
         $invoiceData = [
-            'client_name' => $selected_client_data->name,
-            'client_address' => $selected_client_data->address,
-            'client_tax_number' => $selected_client_data->tax_number,
-            'client_phone' => $selected_client_data->phone,
+            'client_name' => $this->client_name,
+            'client_address' =>$this->client_address,
+            'client_tax_number' => $this->client_tax_number,
+            'client_phone' => $this->client_phone,
             'invoice_number' => $formattedInvoiceNumber,
             'invoice_date' => now()->format('Y-m-d'),
             'total_amount' => $this->total_amount,
@@ -152,16 +151,33 @@ class AddInvoice extends Component
 
         // Save the invoice record in the database
         $invoice = Invoice::create([
-            'client_name' => $selected_client_data->name,
-            'client_address' => $selected_client_data->address,
-            'client_tax_number' => $selected_client_data->tax_number,
-            'client_phone' => $selected_client_data->phone,
+           'client_name' => $this->client_name,
+            'client_address' =>$this->client_address,
+            'client_tax_number' => $this->client_tax_number,
+            'client_phone' => $this->client_phone,
             'invoice_number' => $formattedInvoiceNumber,
             'invoice_date' => now()->format('Y-m-d'),
             'total_amount' => $this->total_price,
             'branch_id' => $this->selectedBranch,
             'pdf_path' => $pdfFileName,
         ]);
+        // save or update client
+        if(!$this->isAddingClient && $this->selected_client_id ){
+       $client = Client::find($this->selected_client_id);
+       $client->name = $this->client_name;
+       $client->address = $this->client_address;
+       $client-> tax_number = $this->client_tax_number;
+       $client->phone = $this->client_phone;
+       $client->save();
+       }
+       elseif($this->isAddingClient){
+         Client::create([
+            'name' => $this->client_name,
+            'address' => $this->client_address,
+            'tax_number' => $this->client_tax_number,
+            'phone' => $this->client_phone, 
+        ]);
+       }
 
         // Reset form after saving
         $this->resetForm();
