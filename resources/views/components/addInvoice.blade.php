@@ -21,49 +21,84 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-						  <div class="mb-3">
-                            <label class="form-label">Select Client</label>
-                            <select class="form-control" wire:model.live="selected_client_id"><option>select</option>
-                            @foreach($clients as $client)
-                                <option value={{$client->id}}> {{$client->name}} </option>
-                            @endforeach  
-                            </select>
-                             {{--
-                                   
-                           @error('client_id') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="mb-3">
-                           
-                            <label class="form-label">Client Name</label>
-                            <input type="text" wire:model.live="client_name" class="form-control" 
-                                   autocomplete="off">
-                            @error('client_name') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Client Address</label>
-                            <input type="text" wire:model="client_address" class="form-control"
-                                   autocomplete="off">
-                            @error('client_address') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Client Tax Number</label>
-                            <input type="text" wire:model="client_tax_number" class="form-control"
-                                   autocomplete="off">
-                            @error('client_tax_number') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Client Phone</label>
-                            <input type="text" wire:model="client_phone" class="form-control"
-                                   autocomplete="off">
-                            @error('client_phone') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Total Amount in Text</label>
-                            <input type="text" wire:model="total_amount" class="form-control"
-                                   autocomplete="off">
-                            @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
---}}
+                            <div>
+                                <!-- Tab Navigation -->
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-primary" wire:click="$set('isAddingClient', false)">
+                                        Select Client
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" wire:click="$set('isAddingClient', true)">
+                                        Add New Client
+                                    </button>
+                                </div>
+
+                                <!-- Select Client Tab -->
+                                @if(!$isAddingClient)
+                                    <div>
+                                        <label class="form-label">Select Client</label>
+                                        <select class="form-control" wire:model="selected_client_id">
+                                            <option value="">Select Client</option>
+                                            @foreach($clients as $client)
+                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('selected_client_id')
+                                        <span class="text-danger error">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endif
+
+                                <!-- Add New Client Tab -->
+                                @if($isAddingClient)
+                                    <div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Client Name</label>
+                                            <input type="text" wire:model="client_name" class="form-control" autocomplete="off">
+                                            @error('client_name')
+                                            <span class="text-danger error">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Client Address</label>
+                                            <input type="text" wire:model="client_address" class="form-control" autocomplete="off">
+                                            @error('client_address')
+                                            <span class="text-danger error">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Client Tax Number</label>
+                                            <input type="text" wire:model="client_tax_number" class="form-control" autocomplete="off">
+                                            @error('client_tax_number')
+                                            <span class="text-danger error">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Client Phone</label>
+                                            <input type="text" wire:model="client_phone" class="form-control" autocomplete="off">
+                                            @error('client_phone')
+                                            <span class="text-danger error">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{--                        <div class="mb-3">--}}
+{{--                            <label class="form-label">Total Amount in Text</label>--}}
+{{--                            <input type="text" wire:model="total_amount" class="form-control"--}}
+{{--                                   autocomplete="off">--}}
+{{--                            @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror--}}
+{{--                        </div>--}}
+
+
+
+
+
 
                         <hr>
                             <div class="row">
@@ -152,27 +187,27 @@
                                             </td>
                                         </tr>
                                         @endforeach
-										
+
                                         <tr>
                                             <td>  Total Price  </td>
                                             <td>
 											{{$this->total_price}}
                                             </td>
-											
+
                                         </tr>
                                         <tr>
                                             <td> Tax Percentage </td>
                                             <td>
                                               {{ $tax_percentage }}
                                             </td>
-											
+
                                         </tr>
 										<tr>
                                             <td>  Total Price After Tax  </td>
                                             <td>
 											{{$this->total_price_after_tax}}
                                             </td>
-											
+
                                         </tr>
                                     </table>
                                 </div>

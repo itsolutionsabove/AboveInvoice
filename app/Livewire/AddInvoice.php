@@ -25,6 +25,7 @@ class AddInvoice extends Component
     use WithFileUploads;
 
     public $clients;
+    public $isAddingClient = false; // Toggle between select and add client
     public $selected_client_id;
     public $selected_client_data;
     public $client_name;
@@ -82,10 +83,10 @@ class AddInvoice extends Component
     {
         unset($this->savedItems[$index]);
     }
-    
+
     public function add()
     {
-        
+
         // Validate the form
         $this->validate([
             'selected_client_id' => 'required',
@@ -184,5 +185,34 @@ class AddInvoice extends Component
         $this->invoice_date = '';
         $this->total_amount = '';
         $this->savedItems = [];
+        $this->selected_client_id = null;
+        $this->selectedBranch = null;
+        $this->isAddingClient = false;
     }
+
+
+    public function updatedSelectedClientId($clientId)
+    {
+        // Fetch and populate client data when the selection changes
+        $client = Client::find($clientId);
+
+        if ($client) {
+            $this->client_name = $client->name;
+            $this->client_address = $client->address;
+            $this->client_tax_number = $client->tax_number;
+            $this->client_phone = $client->phone;
+        } else {
+            $this->resetClientFields();
+        }
+    }
+
+    public function resetClientFields()
+    {
+        // Reset the client fields
+        $this->client_name = null;
+        $this->client_address = null;
+        $this->client_tax_number = null;
+        $this->client_phone = null;
+    }
+
 }
