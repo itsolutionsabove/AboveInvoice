@@ -40,7 +40,12 @@ class ClientEdit extends Component
     {
 
         $this->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('clients', 'name')->ignore($this->id), // Ensure name is unique, excluding the current record
+            ],
             'address' => 'required|string|max:255',
             'tax_number' => [
                 'required',

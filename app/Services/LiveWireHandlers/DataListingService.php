@@ -10,7 +10,7 @@ class DataListingService
     private ?string $search_text = null;
     private int $limit = 20, $page = 1, $offset, $pagesCount, $total;
     private string $orderBy = "id", $orderDirection = "desc";
-    private array $with = [], $where = [];
+    private array $with = [], $where = [] , $whereBetween = [];
 
     public static function init($model = null): DataListingService
     {
@@ -30,6 +30,11 @@ class DataListingService
 
         if(count($this->where))
             foreach ($this->where as $method => $cond) $this->data->{$method}($cond);
+
+        if(count($this->whereBetween))
+            foreach ($this->whereBetween as $condition) {
+                $this->data->whereBetween($condition[0],array($condition[1][0], $condition[1][1]));
+            }
 
         if($this->search_text) $this->data->search($this->search_text);
 
@@ -147,6 +152,13 @@ class DataListingService
     public function setWhere(array $where): DataListingService
     {
         $this->where = $where;
+        return $this;
+    }
+
+    // where between
+    public function setWhereBetween(array $whereBetween): DataListingService
+    {
+        $this->whereBetween = $whereBetween;
         return $this;
     }
 

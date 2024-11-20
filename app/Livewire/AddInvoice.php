@@ -37,6 +37,8 @@ class AddInvoice extends Component
     public $total_amount;
     public $branches;
     public $settings;
+    public $isEditing = false;
+    public $show_qr = false;
 
     public array $savedItems = [], $formModel = [], $itemsForm = [
         'name' => [
@@ -91,7 +93,7 @@ class AddInvoice extends Component
     protected function validateClientFields($isNew = true)
     {
         $rules = [
-            'client_name' => 'required|string|max:255',
+            'client_name' => 'required|string|max:255' . ($isNew ? '|unique:clients,name' : ''),
             'client_address' => 'required|string|max:255',
             'client_tax_number' => 'required|string|max:255' . ($isNew ? '|unique:clients,tax_number' : ''),
             'client_phone' => 'required|string|max:15' . ($isNew ? '|unique:clients,phone' : ''),
@@ -101,14 +103,12 @@ class AddInvoice extends Component
     }
     public function add()
     {
-
-
-
         // Validate the form
         $this->validate([
             'total_amount' => 'required',
             'selectedBranch' => 'required',
             'savedItems' => 'required',
+            'show_qr' => ['required', 'boolean'],
         ]);
 
         $settings = Settings::all();
@@ -155,6 +155,7 @@ class AddInvoice extends Component
             'items' => $this->savedItems,
             'branch' => $branchName,
             'settingData' => $settingData,
+            'show_qr' => $this->show_qr,
         ];
 
 
@@ -229,6 +230,8 @@ class AddInvoice extends Component
         $this->selected_client_id = null;
         $this->selectedBranch = null;
         $this->isAddingClient = false;
+        $this->isEditing = false;
+        $this->show_qr = false;
     }
 
 

@@ -49,7 +49,78 @@
                                 @endif
 
                                 <!-- Add New Client Tab -->
-                                @if($isSelectingClient || $isAddingClient)
+                                @if($isSelectingClient)
+                                    <hr>
+                                    <div>
+                                        <!-- Edit Button -->
+                                        <div class="mb-3">
+                                            <button type="button" class="btn btn-cyan" wire:click="$toggle('isEditing')">
+                                                <i class="fa fa-edit me-2"></i> Toggle Edit
+                                            </button>
+                                        </div>
+
+                                        <!-- Input Fields -->
+                                        <div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Name</label>
+                                                <input
+                                                    type="text"
+                                                    wire:model="client_name"
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    @if(!$isEditing) disabled @endif
+                                                >
+                                                @error('client_name')
+                                                <span class="text-danger error">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Address</label>
+                                                <input
+                                                    type="text"
+                                                    wire:model="client_address"
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    @if(!$isEditing) disabled @endif
+                                                >
+                                                @error('client_address')
+                                                <span class="text-danger error">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Tax Number</label>
+                                                <input
+                                                    type="text"
+                                                    wire:model="client_tax_number"
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    @if(!$isEditing) disabled @endif
+                                                >
+                                                @error('client_tax_number')
+                                                <span class="text-danger error">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Phone</label>
+                                                <input
+                                                    type="text"
+                                                    wire:model="client_phone"
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    @if(!$isEditing) disabled @endif
+                                                >
+                                                @error('client_phone')
+                                                <span class="text-danger error">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @endif
+                                @if($isAddingClient)
                                     <hr>
                                     <div>
                                         <div class="mb-3">
@@ -167,28 +238,30 @@
                                 </div>
                                 <div>
                                     <table class="table table-striped">
+                                        <thead>
                                         <tr>
                                             @foreach($this->itemsForm as $key => $input)
-                                                <th>{{$input['name']}}</th>
+                                                <th style="color:black; border: 1px solid #ddd; padding: 8px;">{{$input['name']}}</th>
                                             @endforeach
-                                            <th>
-                                                -
-                                            </th>
+                                            <th style="border: 1px solid #ddd; padding: 8px;">-</th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
                                         @foreach($this->savedItems as $index => $role)
-                                        <tr>
-                                            @foreach($this->itemsForm as $key => $input)
-                                                <td>{{$role[$key]}}</td>
-                                            @endforeach
-                                            <td>
-                                                <button class="btn btn-danger"
-                                                        wire:click.prevent="deleteItems({{$index}})">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                @foreach($this->itemsForm as $key => $input)
+                                                    <td style="border: 1px solid #ddd; padding: 8px;">{{$role[$key]}}</td>
+                                                @endforeach
+                                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                                    <button class="btn btn-danger" wire:click.prevent="deleteItems({{$index}})">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         @endforeach
-
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-striped" style="border: 1px solid #ddd; padding: 8px;">
                                         <tr>
                                             <td>  Total Price  </td>
                                             <td>
@@ -223,6 +296,17 @@
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
+                            <div class="col-sm-12">
+                                <span class="row">
+                                    <label class="col">Show QR Code</label>
+                                    <span class="col-auto">
+                                        <label class="form-check form-check-single form-switch">
+                                            <input class="form-check-input" type="checkbox" wire:model="show_qr">
+                                        </label>
+                                    </span>
+                                </span>
+                            </div>
+
                         <div class="form-footer">
                             @if($this->__name == "invoice-edit")
                                 <button type="submit" wire:loading.attr="disabled"
