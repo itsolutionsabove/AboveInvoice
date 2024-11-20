@@ -167,20 +167,39 @@
     <table style="margin-top: 10px; border: 2px solid black">
         <tbody>
         <tr>
+            @if($show_qr)
             <th
                 style="
                 line-height: 0.5;
                 padding-left: 10px;
-
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
                 text-align: left;
-
               "
             >
                 <div>
                     <div>IBAN: SA22 1500 0426 1425 5598 0007</div>
                     <div>بنك البلاد, فرع النسيم الشرقي, شارع حسان بن ثابت</div>
+                    <div>
+                        <img style="width: 100px; height: 100px" src="{{public_path('qr.png')}}" alt="" />
+                    </div>
                 </div>
             </th>
+            @else
+                <th
+                    style="
+                line-height: 0.5;
+                padding-left: 10px;
+                text-align: left;
+              "
+                >
+                    <div>
+                        <div>IBAN: SA22 1500 0426 1425 5598 0007</div>
+                        <div>بنك البلاد, فرع النسيم الشرقي, شارع حسان بن ثابت</div>
+                    </div>
+                </th>
+            @endif
+
             <td style="font-size: 13px; padding-right: 10px; padding-top: 0;text-align: right;line-height: 0.8">
                 <div>
 
@@ -194,7 +213,7 @@
                         <span style="display: inline-block">:</span>
                         <span style="width: 130px; display: inline-block">عنوان العميل</span>
                     </div>
-                    <div style="text-align: end; padding-bottom: 10px">
+                    <div style="text-align: end">
                         <span style="display: inline-block">{{$client_tax_number}}</span>
                         <span style="display: inline-block">:</span>
                         <span style="width: 130px; display: inline-block">رقم ضريبي العميل</span>

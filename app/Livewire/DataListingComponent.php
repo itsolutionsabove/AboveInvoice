@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Factory;
 use Illuminate\View\View;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class DataListingComponent extends Component
 {
@@ -22,7 +23,11 @@ class DataListingComponent extends Component
     public string $orderBy = "id", $orderDirection = "desc";
     public string $component;
 
-    private array $where = [], $with = [];
+    public ?string $start_date = null;
+    public ?string $end_date = null;
+
+
+    private array $where = [], $with = [] , $whereBetween = [];
 
     /**
      * @param string $model
@@ -41,9 +46,17 @@ class DataListingComponent extends Component
 
     public function load(): void
     {
+        if ($this->start_date && $this->end_date) {
+            $this->whereBetween[] = [
+                'created_at', // Column name
+                [Carbon::parse($this->start_date)->startOfDay(), Carbon::parse($this->end_date)->endOfDay()] // Date range values
+            ];
+        }
+//        dd($this->whereBetween);
         $listingServ = DataListingService::init($this->model)
             ->setWith($this->with)
             ->setWhere($this->where)
+            ->setWhereBetween($this->whereBetween)
             ->setOrderBy($this->orderBy)
             ->setOrderDirection($this->orderDirection)
             ->setSearchText($this->search_text)
@@ -83,10 +96,36 @@ class DataListingComponent extends Component
         return $this;
     }
 
+    //set where bettwen start_date and end_date
+    public function setWhereBetween($column, $start_date, $end_date): DataListingComponent
+    {
+        $this->whereBetween[] = [
+            'column' => $column,
+            'operator' => 'between',
+            'value' => [$start_date, $end_date],
+        ];
+        return $this;
+    }
+
     public function setWith($with): DataListingComponent
     {
         $this->with = $with;
         return $this;
     }
+
+   // start_date and end_date are the date range fields
+    public function setStartDate($start_date): DataListingComponent
+    {
+        $this->start_date = $start_date;
+        return $this;
+    }
+
+    public function setEndDate($end_date): DataListingComponent
+    {
+        $this->end_date = $end_date;
+        return $this;
+    }
+
+
 
 }
