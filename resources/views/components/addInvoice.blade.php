@@ -270,14 +270,14 @@
 
                                         </tr>
                                         <tr>
-                                            <td> Tax Percentage </td>
+                                            <td> Tax Amount </td>
                                             <td>
                                               {{ $tax_percentage }}
                                             </td>
 
                                         </tr>
 										<tr>
-                                            <td>  Total Price After Tax  </td>
+                                            <td>  Total Price with Tax  </td>
                                             <td>
 											{{$this->total_price_after_tax}}
                                             </td>
