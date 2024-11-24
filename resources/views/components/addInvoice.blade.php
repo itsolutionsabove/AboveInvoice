@@ -174,7 +174,7 @@
 
                         <hr>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-md-3 mb-3">
                                     <label class="form-label">Branches</label>
                                     @error('branches') <span class="text-danger error">{{ $message }}</span> @enderror
                                     <div>
@@ -296,7 +296,7 @@
                                    autocomplete="off">
                             @error('total_amount') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
-                            <div class="col-sm-12">
+                            <div class="col-md-3 mb-3">
                                 <span class="row">
                                     <label class="col">Show QR Code</label>
                                     <span class="col-auto">
